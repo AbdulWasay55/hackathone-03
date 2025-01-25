@@ -6,6 +6,13 @@ export const productSchema = defineType({
   type: "document",
   fields: [
     {
+      name: "id",
+      title: "Product ID",
+      type: "string",
+      description: "A unique identifier for the product.",
+      validation: (Rule) => Rule.required(),
+    },
+    {
       name: "title",
       title: "Product Title",
       type: "string",

@@ -1,37 +1,37 @@
-'use client';
-import { client } from "@/sanity/lib/client";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { urlFor } from "@/sanity/lib/image";
-import { IoCartOutline } from "react-icons/io5";
-import { useCart } from "../../../context/CartContex";
+'use client'
+import { client } from '@/sanity/lib/client';
+import { urlFor } from '@/sanity/lib/image';
+import Image from 'next/image';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react'
+import { IoCartOutline } from 'react-icons/io5';
+import { useCart } from '../../../context/CartContex';
 
-// Type for Sanity Data
-type SanityData = {
-  id: string;
-  title: string;
-  price: number;
-  priceWithoutDiscount: number;
-  badge: string;
-  image: {
-    asset: {
+
+type SanityDataForAllProducts = {
+    id: string;
+    title: string;
+    price: number;
+    priceWithoutDiscount: number;
+    badge: string;
+    image: {
+      asset: {
+        _ref: string;
+        _type: string;
+      };
+    };
+    category: {
       _ref: string;
       _type: string;
     };
+    description: string;
+    inventory: number;
+    tags: string[];
   };
-  category: {
-    _ref: string;
-    _type: string;
-  };
-  description: string;
-  inventory: number;
-  tags: string[];
-};
 
 const SanityData = () => {
   const { addToCart } = useCart();
-  const [products, setProducts] = useState<SanityData[]>([]); // State to store fetched products
+  const [products, setProducts] = useState<SanityDataForAllProducts[]>([]); // State to store fetched products
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -40,11 +40,16 @@ const SanityData = () => {
         "Citrus Edge",
         "Ivory Charm",
         "Library Stool Chair",
+        "Sleek Spin",
+        "Modern Cozy",
+        "Scandi Dip Set",
+        "Nordic Spin",
+        "Gray Elegance"
       ];
 
       try {
         // Fetch products from Sanity
-        const fetchData: SanityData[] = await client.fetch(
+        const fetchData: SanityDataForAllProducts[] = await client.fetch(
           `*[_type == 'products' && title in $titles]{
             id, 
             title, 
@@ -68,15 +73,25 @@ const SanityData = () => {
     fetchProducts();
   }, []); // Empty dependency array ensures this runs only once
 
+
+  
+
+
+
+    
   return (
     <div>
-      <div className="grid sm:grid-cols-2 gap-10 lg:grid-cols-3 mx-5 mb-5 xl:grid-cols-4">
+        <div className=' font-semibold text-[#272343] text-[40px] my-20 flex justify-center'>Our Products</div>
+
+        <div className="grid sm:grid-cols-2 gap-10 lg:grid-cols-3 mx-12 sm:mx-5 mb-5 xl:grid-cols-4">
         {products.map((product) => (
           
-            <div  key={product.id} className="w-[312px] h-[377px] flex flex-col gap-[14px] ml-7  ">
+            <div  key={product.id} className="w-[312px] h-[377px] flex flex-col gap-[14px] justify-center  ">
               {/* Product Image */}
               <Link
-              href={`/product/${product.id}`} className="flex flex-col gap-[10px] items-center p-[20px] rounded-2xl">
+              href={`/product/${product.id}`}
+             
+              className="flex flex-col gap-[10px] items-center  p-[20px] rounded-2xl">
               <Image
                 src={urlFor(product.image).url() || "/placeholder.svg"}
                 alt={product.title}
@@ -96,7 +111,7 @@ const SanityData = () => {
                 </div>
                 {/* Cart Icon */}
                 <div className="w-11 h-11 rounded-lg bg-[#F0F2F3] flex items-center justify-center active:bg-[#029FAE] active:text-[white]">
-                  <IoCartOutline 
+                  <IoCartOutline
                     onClick={() =>
                       addToCart({
                         id: product.id,
@@ -116,7 +131,7 @@ const SanityData = () => {
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SanityData;
+export default SanityData
